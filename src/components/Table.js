@@ -4,6 +4,7 @@ import Todos from "./Singleton";
 import moment from "moment/moment";
 import DeleteModal from "./DeleteModal";
 import { AppContext } from "../App";
+import CircleCheckbox from "./CircleCheckbox";
 
 const Table = () => {
   const [todo, setTodo] = useState(Todos.todos);
@@ -69,7 +70,7 @@ const Table = () => {
       <table className="w-full rounded mt-8 text-base relative">
         <thead className="bg-blue-100 rounded">
           <tr className="text-left pl-2 w-full ">
-            <th className="pl-4 w-[10%] max-md:hidden">S/N</th>
+            <th className="pl-4 w-[10%] max-md:hidden"></th>
             <th className=" w-[40%] py-2 font-bold">
               <span className="max-md:hidden">Todo Name</span>
               <span className="hidden max-md:block ">Todos</span>
@@ -85,9 +86,29 @@ const Table = () => {
               todoData?.map((item, index) => {
                 return (
                   <tr key={item.id} className="border-b">
-                    <td className="pl-4 border-b ">{page * 5 + index + 1}</td>
+                    <td className="pl-4 border-b ">
+                      <CircleCheckbox
+                        checked={item.complete}
+                        onChange={() => {
+                          Todos.markAsCompleted({
+                            name: item.name,
+                            creationDate: item.creationDate,
+                            age: item.age,
+                            id: item.id,
+                            complete: item.complete ? false : true,
+                          });
+                          setTodo(Todos.todos);
+                        }}
+                      />
+                    </td>
                     <td className="py-8 border-b">
-                      <div className="font-bold text-lg">{item.name}</div>
+                      <div
+                        className={`font-bold text-lg ${
+                          item.complete && "line-through"
+                        } `}
+                      >
+                        {item.name}
+                      </div>
                       <div className="hidden max-md:block">
                         Create date :{" "}
                         {moment(item.creationDate).format("DD-MM-YYYY")}

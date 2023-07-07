@@ -26,6 +26,15 @@ class TodoList {
   updateLocalStorage = (todoList) => {
     localStorage.setItem("todo-list", JSON.stringify(todoList));
   };
+  markAsCompleted = (todo) => {
+    this.todos = this.todos.map((item) => {
+      return item.id === todo.id ? todo : item;
+    });
+    const incomplete = this.todos.filter((item) => !item.complete);
+    const complete = this.todos.filter((item) => item.complete);
+    this.todos = [...incomplete, ...complete];
+    this.updateLocalStorage(this.todos);
+  };
 }
 
 const Todos = new TodoList();

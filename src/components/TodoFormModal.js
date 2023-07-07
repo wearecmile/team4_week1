@@ -4,6 +4,7 @@ import Modal from "react-modal";
 import Todos from "./Singleton";
 import { useContext } from "react";
 import { AppContext } from "../App";
+import moment from "moment";
 
 const TodoFormModal = ({
   isOpen,
@@ -21,7 +22,7 @@ const TodoFormModal = ({
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm();
+  } = useForm({});
   const onSubmit = (values) => {
     if (isEdit) {
       Todos.updateTodo({
@@ -29,6 +30,7 @@ const TodoFormModal = ({
         creationDate: data.creationDate,
         age: new Date(values.date),
         id: data.id,
+        complete: data.complete,
       });
       displaySnackbar({
         type: "success",
@@ -40,6 +42,7 @@ const TodoFormModal = ({
         creationDate: new Date(),
         age: new Date(values.date),
         id: new Date(),
+        complete: false,
       });
       displaySnackbar({
         type: "success",
@@ -71,7 +74,9 @@ const TodoFormModal = ({
   useEffect(() => {
     reset({
       name: data?.name ? data?.name : "",
-      date: data?.age ? new Date(data?.age).toLocaleDateString("en-CA") : "",
+      date: data?.age
+        ? new Date(data?.age).toLocaleDateString("en-CA")
+        : new Date().toLocaleDateString("en-CA"),
     });
   }, [isOpen]);
 
@@ -122,7 +127,7 @@ const TodoFormModal = ({
                 </p>
                 <input
                   type="date"
-                  defaultValue={data?.date}
+                  defaultValue={"12-12-2023"}
                   {...register("date", { required: true })}
                   className={`border rounded px-1 mt-1 min-w-full min-h-full ${
                     errors.date && "border-red-600"
